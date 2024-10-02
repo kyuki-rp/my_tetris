@@ -36,3 +36,11 @@ class Atelier():
             self.block_size * (y + 1),
             fill=color
         )
+
+    def draw_game_over(self):
+        self.canvas.create_text(
+            50, 50,
+            text="GAME OVER",
+            font=("Times", 12),
+            fill="red"
+        )

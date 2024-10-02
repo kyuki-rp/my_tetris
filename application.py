@@ -18,15 +18,18 @@ class Application(tk.Frame):
         return Tetromino(7, 1, 0, random.choice([2, 3, 4, 5, 6, 7, 8]))
 
     def update(self):
-        self.count += 1
-        self.control_proc()
-        self.fill_proc()
-        if self.count % 10 == 0:
-            self.drop_proc()
-        self.atelier.delete_all()
-        self.atelier.draw_field(self.field)
-        self.atelier.draw_tetromino(self.tetromino)
-        self.after(50, self.update)
+        if max(self.field.tiles.flatten()) == 9:
+            self.atelier.draw_game_over()
+        else:
+            self.count += 1
+            self.control_proc()
+            self.fill_proc()
+            if self.count % 10 == 0:
+                self.drop_proc()
+            self.atelier.delete_all()
+            self.atelier.draw_field(self.field)
+            self.atelier.draw_tetromino(self.tetromino)
+            self.after(50, self.update)
 
     def fill_proc(self):
         self.field.check()

@@ -37,7 +37,10 @@ class Field():
         )
 
     def put_block(self, x, y, shape):
-        self.tiles[y][x] = shape
+        if self.tiles[y][x] == 0:
+            self.tiles[y][x] = shape
+        else:
+            self.tiles[y][x] = 9
 
     def check(self):
         for y in range(self.tiles_size["y"]-1):
