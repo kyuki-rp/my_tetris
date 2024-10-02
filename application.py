@@ -1,5 +1,5 @@
 import tkinter as tk
-from game import Field
+from game import Field, Tetromino
 
 
 class Application(tk.Frame):
@@ -10,7 +10,14 @@ class Application(tk.Frame):
         self.canvas.pack()
         self.block_size = 20
         self.field = Field()
+        self.tetromino = Tetromino(7, 1)
         self.draw_field(self.field)
+        self.draw_tetromino(self.tetromino)
+
+    def draw_tetromino(self, tetromino):
+        blocks = tetromino.calc_blocks()
+        for block in blocks:
+            self.draw_block(block.x, block.y)
 
     def draw_field(self, field):
         for y in range(field.tiles_size["y"]):
