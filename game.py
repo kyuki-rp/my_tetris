@@ -36,6 +36,9 @@ class Field():
             and 0 <= block.y and block.y < self.tiles_size["y"]
         )
 
+    def put_block(self, x, y, shape):
+        self.tiles[y][x] = shape
+
 
 class Block():
     def __init__(self, x, y):

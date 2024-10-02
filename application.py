@@ -23,6 +23,8 @@ class Application(tk.Frame):
         if self.field.is_allowed(future_tetromino):
             self.tetromino.y += 1
         else:
+            for block in self.tetromino.calc_blocks():
+                self.field.put_block(block.x, block.y, self.tetromino.shape)
             self.tetromino = Tetromino(7, 1)
 
 
