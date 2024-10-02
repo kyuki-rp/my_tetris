@@ -14,9 +14,13 @@ class Application(tk.Frame):
 
     def update(self):
         self.tetromino.y += 1
+        self.delete_all()
         self.draw_field(self.field)
         self.draw_tetromino(self.tetromino)
         self.after(50, self.update)
+
+    def delete_all(self):
+        self.canvas.delete("all")
 
     def draw_tetromino(self, tetromino):
         blocks = tetromino.calc_blocks()
