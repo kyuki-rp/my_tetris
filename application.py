@@ -8,6 +8,9 @@ class Application(tk.Frame):
         self.canvas = tk.Canvas(master, width=400, height=400, bg="skyblue")
         self.canvas.pack()
         self.block_size = 20
+        self.draw_field()
+
+    def draw_field(self):
         for y in range(0, 10):
             for x in range(0, 10):
                 self.draw_block(x, y)
