@@ -13,11 +13,19 @@ class Application(tk.Frame):
         self.tetromino = Tetromino(7, 1)
 
     def update(self):
-        self.tetromino.y += 1
+        self.drop_proc()
         self.delete_all()
         self.draw_field(self.field)
         self.draw_tetromino(self.tetromino)
         self.after(50, self.update)
+
+    def drop_proc(self):
+        future_tetromino = self.tetromino.copy()
+        future_tetromino.y += 1
+        if self.field.is_allowed(future_tetromino):
+            self.tetromino.y += 1
+        else:
+            self.tetromino = Tetromino(7, 1)
 
     def delete_all(self):
         self.canvas.delete("all")
