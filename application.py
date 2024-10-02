@@ -7,6 +7,10 @@ class Application(tk.Frame):
         master.title("マイテトリス")
         self.canvas = tk.Canvas(master, width=400, height=400, bg="skyblue")
         self.canvas.pack()
+        self.draw_block()
+
+    def draw_block(self):
+        self.canvas.create_rectangle(0, 0, 20, 20, fill="grey")
 
 
 if __name__ == "__main__":
