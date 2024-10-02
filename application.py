@@ -1,4 +1,5 @@
 import tkinter as tk
+from game import Field
 
 
 class Application(tk.Frame):
@@ -8,12 +9,15 @@ class Application(tk.Frame):
         self.canvas = tk.Canvas(master, width=400, height=400, bg="skyblue")
         self.canvas.pack()
         self.block_size = 20
-        self.draw_field()
+        self.field = Field()
+        self.draw_field(self.field)
 
-    def draw_field(self):
-        for y in range(0, 10):
-            for x in range(0, 10):
-                self.draw_block(x, y)
+    def draw_field(self, field):
+        for y in range(field.tiles_size["y"]):
+            for x in range(field.tiles_size["x"]):
+                block_type = field.tiles[y][x]
+                if block_type != 0:
+                    self.draw_block(x, y)
 
     def draw_block(self, x, y):
         self.canvas.create_rectangle(
