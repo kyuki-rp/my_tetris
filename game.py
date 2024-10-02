@@ -65,5 +65,9 @@ class Tetromino():
             blocks = [Block(block.y, -block.x) for block in blocks]
         return blocks
 
-    def copy(self):
-        return Tetromino(self.x, self.y, self.rot, self.shape)
+    def next(self, controller):
+        copy_tetromino = Tetromino(self.x, self.y, self.rot, self.shape)
+        copy_tetromino.x += controller["x"]
+        copy_tetromino.y += controller["y"]
+        copy_tetromino.rot += controller["rot"]
+        return copy_tetromino

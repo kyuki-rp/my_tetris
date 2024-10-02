@@ -21,24 +21,18 @@ class Application(tk.Frame):
         self.after(50, self.update)
 
     def drop_proc(self):
-        future_tetromino = self.tetromino.copy()
-        future_tetromino.y += 1
+        future_tetromino = self.tetromino.next({"x": 0, "y": 1, "rot": 0})
         if self.field.is_allowed(future_tetromino):
-            self.tetromino.y += 1
+            self.tetromino = future_tetromino
         else:
             for block in self.tetromino.calc_blocks():
                 self.field.put_block(block.x, block.y, self.tetromino.shape)
             self.tetromino = Tetromino(7, 1)
 
     def control_proc(self):
-        future_tetromino = self.tetromino.copy()
-        future_tetromino.x += self.controller["x"]
-        future_tetromino.y += self.controller["y"]
-        future_tetromino.rot += self.controller["rot"]
+        future_tetromino = self.tetromino.next(self.controller)
         if self.field.is_allowed(future_tetromino):
-            self.tetromino.x += self.controller["x"]
-            self.tetromino.y += self.controller["y"]
-            self.tetromino.rot += self.controller["rot"]
+            self.tetromino = future_tetromino
         self.controller = {"x": 0, "y": 0, "rot": 0}
 
     def key_event(self, event):
