@@ -39,6 +39,14 @@ class Field():
     def put_block(self, x, y, shape):
         self.tiles[y][x] = shape
 
+    def check(self):
+        for y in range(self.tiles_size["y"]-1):
+            if all(tile != 0 for tile in self.tiles[y]):
+                new_line = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+                new_tiles = np.delete(self.tiles, y, 0)
+                new_tiles = np.vstack((new_line, new_tiles))
+                self.tiles = new_tiles
+
 
 class Block():
     def __init__(self, x, y):
