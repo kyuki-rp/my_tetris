@@ -8,13 +8,17 @@ class Application(tk.Frame):
         self.canvas = tk.Canvas(master, width=400, height=400, bg="skyblue")
         self.canvas.pack()
         self.block_size = 20
-        for y in range(0, 200, 20):
-            for x in range(0, 200, 20):
+        for y in range(0, 10):
+            for x in range(0, 10):
                 self.draw_block(x, y)
 
     def draw_block(self, x, y):
         self.canvas.create_rectangle(
-            x, y, x + self.block_size, y + self.block_size, fill="grey"
+            self.block_size * x,
+            self.block_size * y,
+            self.block_size * (x + 1),
+            self.block_size * (y + 1),
+            fill="grey"
         )
 
 
