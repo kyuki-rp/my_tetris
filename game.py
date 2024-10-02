@@ -55,7 +55,15 @@ class Tetromino():
 
     def calc_blocks(self):
         blocks = [Block(-1, 0), Block(0, 0), Block(0, -1), Block(1, 0)]
+        blocks = self.rotate(blocks, self.rot)
         return [Block(self.x + block.x, self.y + block.y) for block in blocks]
+
+    @staticmethod
+    def rotate(blocks, rot):
+        rot = rot % 4
+        for _ in range(rot):
+            blocks = [Block(block.y, -block.x) for block in blocks]
+        return blocks
 
     def copy(self):
         return Tetromino(self.x, self.y, self.rot, self.shape)

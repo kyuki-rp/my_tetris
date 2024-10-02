@@ -9,7 +9,7 @@ class Application(tk.Frame):
         self.atelier = Atelier(master)
         self.field = Field()
         self.tetromino = Tetromino(7, 1)
-        self.controller = {"x": 0, "y": 0}
+        self.controller = {"x": 0, "y": 0, "rot": 0}
         master.bind("<KeyPress>", self.key_event)
 
     def update(self):
@@ -34,19 +34,23 @@ class Application(tk.Frame):
         future_tetromino = self.tetromino.copy()
         future_tetromino.x += self.controller["x"]
         future_tetromino.y += self.controller["y"]
+        future_tetromino.rot += self.controller["rot"]
         if self.field.is_allowed(future_tetromino):
             self.tetromino.x += self.controller["x"]
             self.tetromino.y += self.controller["y"]
-        self.controller = {"x": 0, "y": 0}
+            self.tetromino.rot += self.controller["rot"]
+        self.controller = {"x": 0, "y": 0, "rot": 0}
 
     def key_event(self, event):
         key = event.keysym
         if key == "1":
-            self.controller = {"x": -1, "y": 0}
+            self.controller = {"x": -1, "y": 0, "rot": 0}
         if key == "2":
-            self.controller = {"x": 0, "y": 1}
+            self.controller = {"x": 0, "y": 1, "rot": 0}
         if key == "3":
-            self.controller = {"x": 1, "y": 0}
+            self.controller = {"x": 1, "y": 0, "rot": 0}
+        if key == "4":
+            self.controller = {"x": 0, "y": 0, "rot": 1}
 
 
 if __name__ == "__main__":
