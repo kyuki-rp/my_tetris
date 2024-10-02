@@ -11,10 +11,13 @@ class Application(tk.Frame):
         self.tetromino = Tetromino(7, 1)
         self.controller = {"x": 0, "y": 0, "rot": 0}
         master.bind("<KeyPress>", self.key_event)
+        self.count = 0
 
     def update(self):
+        self.count += 1
         self.control_proc()
-        self.drop_proc()
+        if self.count % 10 == 0:
+            self.drop_proc()
         self.atelier.delete_all()
         self.atelier.draw_field(self.field)
         self.atelier.draw_tetromino(self.tetromino)
