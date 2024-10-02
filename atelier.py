@@ -14,20 +14,25 @@ class Atelier():
     def draw_tetromino(self, tetromino):
         blocks = tetromino.calc_blocks()
         for block in blocks:
-            self.draw_block(block.x, block.y)
+            self.draw_block(block.x, block.y, block_type=tetromino.shape)
 
     def draw_field(self, field):
         for y in range(field.tiles_size["y"]):
             for x in range(field.tiles_size["x"]):
                 block_type = field.tiles[y][x]
                 if block_type != 0:
-                    self.draw_block(x, y)
+                    self.draw_block(x, y, block_type)
 
-    def draw_block(self, x, y):
+    def draw_block(self, x, y, block_type):
+        if block_type == 1:
+            color = "grey"
+        else:
+            color = "blue"
+
         self.canvas.create_rectangle(
             self.block_size * x,
             self.block_size * y,
             self.block_size * (x + 1),
             self.block_size * (y + 1),
-            fill="grey"
+            fill=color
         )
