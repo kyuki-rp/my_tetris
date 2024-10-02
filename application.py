@@ -11,8 +11,12 @@ class Application(tk.Frame):
         self.block_size = 20
         self.field = Field()
         self.tetromino = Tetromino(7, 1)
+
+    def update(self):
+        self.tetromino.y += 1
         self.draw_field(self.field)
         self.draw_tetromino(self.tetromino)
+        self.after(50, self.update)
 
     def draw_tetromino(self, tetromino):
         blocks = tetromino.calc_blocks()
@@ -39,4 +43,5 @@ class Application(tk.Frame):
 if __name__ == "__main__":
     root = tk.Tk()
     app = Application(master=root)
+    app.update()
     app.mainloop()
