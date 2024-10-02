@@ -1,3 +1,4 @@
+import random
 import tkinter as tk
 from game import Field, Tetromino
 from atelier import Atelier
@@ -8,10 +9,13 @@ class Application(tk.Frame):
         super().__init__(master)
         self.atelier = Atelier(master)
         self.field = Field()
-        self.tetromino = Tetromino(7, 1)
+        self.tetromino = self.make_tetromino()
         self.controller = {"x": 0, "y": 0, "rot": 0}
         master.bind("<KeyPress>", self.key_event)
         self.count = 0
+
+    def make_tetromino(self):
+        return Tetromino(7, 1, 0, random.choice([2, 3, 4, 5, 6, 7, 8]))
 
     def update(self):
         self.count += 1
@@ -34,7 +38,7 @@ class Application(tk.Frame):
         else:
             for block in self.tetromino.calc_blocks():
                 self.field.put_block(block.x, block.y, self.tetromino.shape)
-            self.tetromino = Tetromino(7, 1)
+            self.tetromino = self.make_tetromino()
 
     def control_proc(self):
         future_tetromino = self.tetromino.next(self.controller)

@@ -62,9 +62,33 @@ class Tetromino():
         self.shape = shape
 
     def calc_blocks(self):
-        blocks = [Block(-1, 0), Block(0, 0), Block(0, -1), Block(1, 0)]
+        blocks = self.get_blocks(self.shape)
         blocks = self.rotate(blocks, self.rot)
         return [Block(self.x + block.x, self.y + block.y) for block in blocks]
+
+    @staticmethod
+    def get_blocks(shape):
+        # T型
+        if shape == 2:
+            return [Block(-1, 0), Block(0, 0), Block(0, -1), Block(1, 0)]
+        # Z型
+        elif shape == 3:
+            return [Block(-1, -1), Block(0, -1), Block(0, 0), Block(1, 0)]
+        # S型
+        elif shape == 4:
+            return [Block(-1, 0), Block(0, 0), Block(0, -1), Block(1, -1)]
+        # L型
+        elif shape == 5:
+            return [Block(0, -1), Block(0, 0), Block(0, 1), Block(1, 1)]
+        # J型
+        elif shape == 6:
+            return [Block(0, -1), Block(0, 0), Block(0, 1), Block(-1, 1)]
+        # O型
+        elif shape == 7:
+            return [Block(-1, -1), Block(-1, 0), Block(0, 0), Block(0, -1)]
+        # I型
+        elif shape == 8:
+            return [Block(-2, 0), Block(-1, 0), Block(0, 0), Block(1, 0)]
 
     @staticmethod
     def rotate(blocks, rot):
