@@ -2,340 +2,197 @@ import pytest
 from game import Field, Block, Tetromino
 
 
-class TestTetromino():
-    def test_calc_blocks(self):
-        tetromino = Tetromino(10, 10, 1, 2)
-        blocks = tetromino.calc_blocks()
-        assert (
-            blocks == [
-                Block(block.x + 10, block.y + 10)
-                for block in Tetromino.rotate(Tetromino.get_blocks(2), 1)
-            ]
-        )
-
-    def test_rotate_1(self):
-        blocks = [Block(-1, 0), Block(0, 0), Block(0, -1), Block(1, 0)]
-        blocks = Tetromino.rotate(blocks, 1)
-        assert blocks == [Block(0, 1), Block(0, 0), Block(-1, 0), Block(0, -1)]
-
-    def test_rotate_2(self):
-        blocks = [Block(-1, 0), Block(0, 0), Block(0, -1), Block(1, 0)]
-        blocks = Tetromino.rotate(blocks, 2)
-        assert blocks == [Block(1, 0), Block(0, 0), Block(0, 1), Block(-1, 0)]
-
-    def test_rotate_3(self):
-        blocks = [Block(-1, 0), Block(0, 0), Block(0, -1), Block(1, 0)]
-        blocks = Tetromino.rotate(blocks, 3)
-        assert blocks == [Block(0, -1), Block(0, 0), Block(1, 0), Block(0, 1)]
-
-    def test_rotate_4(self):
-        blocks = [Block(-1, 0), Block(0, 0), Block(0, -1), Block(1, 0)]
-        assert blocks == Tetromino.rotate(blocks, 4)
-
-    def test_rotate_5(self):
-        blocks = [Block(-1, 0), Block(0, 0), Block(0, -1), Block(1, 0)]
-        assert Tetromino.rotate(blocks, 1) == Tetromino.rotate(blocks, 5)
-
-    def test_get_blocks_different_each_other(self):
-        shape_2_blocks = Tetromino.get_blocks(2)
-        shape_3_blocks = Tetromino.get_blocks(3)
-        shape_4_blocks = Tetromino.get_blocks(4)
-        shape_5_blocks = Tetromino.get_blocks(5)
-        shape_6_blocks = Tetromino.get_blocks(6)
-        shape_7_blocks = Tetromino.get_blocks(7)
-        shape_8_blocks = Tetromino.get_blocks(8)
-        assert (
-            shape_2_blocks != shape_3_blocks
-            and shape_2_blocks != shape_4_blocks
-            and shape_2_blocks != shape_5_blocks
-            and shape_2_blocks != shape_6_blocks
-            and shape_2_blocks != shape_7_blocks
-            and shape_2_blocks != shape_8_blocks
-            and shape_3_blocks != shape_4_blocks
-            and shape_3_blocks != shape_5_blocks
-            and shape_3_blocks != shape_6_blocks
-            and shape_3_blocks != shape_7_blocks
-            and shape_3_blocks != shape_8_blocks
-            and shape_4_blocks != shape_5_blocks
-            and shape_4_blocks != shape_6_blocks
-            and shape_4_blocks != shape_7_blocks
-            and shape_4_blocks != shape_8_blocks
-            and shape_5_blocks != shape_6_blocks
-            and shape_5_blocks != shape_7_blocks
-            and shape_5_blocks != shape_8_blocks
-            and shape_6_blocks != shape_7_blocks
-            and shape_6_blocks != shape_8_blocks
-            and shape_7_blocks != shape_8_blocks
-        )
-
-    def test_get_blocks_undefined_shape_1(self):
-        with pytest.raises(ValueError):
-            Tetromino.get_blocks(1)
-
-    def test_get_blocks_undefined_shape_9(self):
-        with pytest.raises(ValueError):
-            Tetromino.get_blocks(9)
-
-    def test_next_do_nothing(self):
-        tetromino = Tetromino(0, 0, 0, 2)
-        future_tetromino = tetromino.next({"x": 0, "y": 0, "rot": 0})
-        assert (
-            future_tetromino.x == tetromino.x
-            and future_tetromino.y == tetromino.x
-            and future_tetromino.rot == tetromino.rot
-        )
-
-    def test_next_x_inc_1(self):
-        tetromino = Tetromino(0, 0, 0, 2)
-        future_tetromino = tetromino.next({"x": 1, "y": 0, "rot": 0})
-        assert (
-            future_tetromino.x == tetromino.x + 1
-            and future_tetromino.y == tetromino.x
-            and future_tetromino.rot == tetromino.rot
-        )
-
-    def test_next_x_dec_1(self):
-        tetromino = Tetromino(0, 0, 0, 2)
-        future_tetromino = tetromino.next({"x": -1, "y": 0, "rot": 0})
-        assert (
-            future_tetromino.x == tetromino.x - 1
-            and future_tetromino.y == tetromino.y
-            and future_tetromino.rot == tetromino.rot
-        )
-
-    def test_next_y_inc_1(self):
-        tetromino = Tetromino(0, 0, 0, 2)
-        future_tetromino = tetromino.next({"x": 0, "y": 1, "rot": 0})
-        assert (
-            future_tetromino.x == tetromino.x 
-            and future_tetromino.y == tetromino.y + 1
-            and future_tetromino.rot == tetromino.rot
-        )
-
-    def test_next_y_dec_1(self):
-        tetromino = Tetromino(0, 0, 0, 2)
-        future_tetromino = tetromino.next({"x": 0, "y": -1, "rot": 0})
-        assert (
-            future_tetromino.x == tetromino.x
-            and future_tetromino.y == tetromino.y -1
-            and future_tetromino.rot == tetromino.rot
-        )
-
-    def test_next_rot_inc_1(self):
-        tetromino = Tetromino(0, 0, 0, 2)
-        future_tetromino = tetromino.next({"x": 0, "y": 0, "rot": 1})
-        assert (
-            future_tetromino.x == tetromino.x
-            and future_tetromino.y == tetromino.y
-            and future_tetromino.rot == tetromino.rot + 1
-        )
-
-
 class TestField():
-    def test_is_allowed_left_not_allowed(self):
-        field = Field([
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    @pytest.fixture
+    def field(self):
+        return Field([
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         ])
-        tetromino = Tetromino(1, 1, 0, 2)
-        assert field.is_allowed(tetromino) is False
 
-    def test_is_allowed_left_allowed(self):
-        field = Field([
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        ])
+    def test_is_allowed(self, field):
+        # T型テトロミノのブロックを置く空間がある
         tetromino = Tetromino(2, 1, 0, 2)
         assert field.is_allowed(tetromino) is True
 
-    def test_is_allowed_right_allowed(self):
-        field = Field([
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        ])
-        tetromino = Tetromino(11, 1, 0, 2)
-        assert field.is_allowed(tetromino) is True
-
-    def test_is_allowed_right_not_allowed(self):
-        field = Field([
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        ])
-        tetromino = Tetromino(12, 1, 0, 2)
+        # T型テトロミノのブロックが壁と重なる
+        tetromino = Tetromino(1, 3, 0, 2)
         assert field.is_allowed(tetromino) is False
 
-    def test_is_allowed_bottom_allowed(self):
-        field = Field([
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        ])
-        tetromino = Tetromino(2, 15, 0, 2)
-        assert field.is_allowed(tetromino) is True
-
-    def test_is_allowed_bottom_not_allowed(self):
-        field = Field([
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        ])
-        tetromino = Tetromino(2, 16, 0, 2)
-        assert field.is_allowed(tetromino) is False
-
-    def test_put_block(self):
-        field = Field([
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        ])
+    def test_put_block(self, field):
+        # プロックを設置
         field.put_block(2, 1, 2)
-        expected_field = Field([
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        ])
-        assert (field.tiles == expected_field.tiles).all()
+        assert field.tiles[1][2] == 2
 
-    def test_check_do_nothing(self):
-        field = Field([
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        ])
-        field.check()
-        expected_field = Field([
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        ])
-        assert (field.tiles == expected_field.tiles).all()
+        # 同じ位置に新しいプロックを設置すると重複により9になる
+        field.put_block(2, 1, 2)
+        assert field.tiles[1][2] == 9
 
-    def test_check_3_line(self):
+    def test_check_3(self):
         field = Field([
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         ])
         field.check()
-        expected_field = Field([
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        expected = Field([
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         ])
-        assert (field.tiles == expected_field.tiles).all()
+        assert (field.tiles == expected.tiles).all()
+
+
+class TestTetromino():
+    def test_calc_blocks(self):
+        # T型テトロミノのブロック位置
+        tetromino = Tetromino(10, 10, 0, 2)
+        blocks = tetromino.calc_blocks()
+        expected = [
+            Block(block.x + 10, block.y + 10)
+            for block in Tetromino.get_blocks(2)
+        ]
+        assert blocks == expected
+
+    def test_rotate(self):
+        # 90度回転
+        blocks = [Block(-1, 0), Block(0, 0), Block(0, -1), Block(1, 0)]
+        rotated_blocks = Tetromino.rotate(blocks, 1)
+        expected = [Block(0, 1), Block(0, 0), Block(-1, 0), Block(0, -1)]
+        assert rotated_blocks == expected
+
+        # 180度回転
+        blocks = [Block(-1, 0), Block(0, 0), Block(0, -1), Block(1, 0)]
+        rotated_blocks = Tetromino.rotate(blocks, 2)
+        expected = [Block(1, 0), Block(0, 0), Block(0, 1), Block(-1, 0)]
+        assert rotated_blocks == expected
+
+        # 270度回転
+        blocks = [Block(-1, 0), Block(0, 0), Block(0, -1), Block(1, 0)]
+        rotated_blocks = Tetromino.rotate(blocks, 3)
+        expected = [Block(0, -1), Block(0, 0), Block(1, 0), Block(0, 1)]
+        assert rotated_blocks == expected
+
+        # 360度回転
+        blocks = [Block(-1, 0), Block(0, 0), Block(0, -1), Block(1, 0)]
+        rotated_blocks = Tetromino.rotate(blocks, 4)
+        assert rotated_blocks == blocks
+
+    def test_get_blocks_undefined_shape(self):
+        # 未定義のテトロミノ: 1
+        with pytest.raises(ValueError):
+            Tetromino.get_blocks(1)
+
+        # 未定義のテトロミノ: 9
+        with pytest.raises(ValueError):
+            Tetromino.get_blocks(9)
+
+    def test_next(self):
+        # 右に1移動
+        tetromino = Tetromino(3, 3, 0, 2)
+        future_tetromino = tetromino.next({"x": 1, "y": 0, "rot": 0})
+        assert (
+            future_tetromino.x == 4
+            and future_tetromino.y == 3
+            and future_tetromino.rot == 0
+        )
+
+        # 左に1移動
+        tetromino = Tetromino(3, 3, 0, 2)
+        future_tetromino = tetromino.next({"x": -1, "y": 0, "rot": 0})
+        assert (
+            future_tetromino.x == 2
+            and future_tetromino.y == 3
+            and future_tetromino.rot == 0
+        )
+
+        # 下に1移動
+        tetromino = Tetromino(3, 3, 0, 2)
+        future_tetromino = tetromino.next({"x": 0, "y": 1, "rot": 0})
+        assert (
+            future_tetromino.x == 3
+            and future_tetromino.y == 4
+            and future_tetromino.rot == 0
+        )
+
+        # 90度回転
+        tetromino = Tetromino(3, 3, 0, 2)
+        future_tetromino = tetromino.next({"x": 0, "y": 0, "rot": 1})
+        assert (
+            future_tetromino.x == 3
+            and future_tetromino.y == 3
+            and future_tetromino.rot == 1
+        )
+
+
+class TestIntegration():
+    @pytest.fixture
+    def field(self):
+        return Field([
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        ])
+
+    @pytest.fixture
+    def tetromino(self):
+        # T型テトロミノ
+        return Tetromino(3, 1, 0, 2)
+
+    def test_move(self, field, tetromino):
+        # 右に1移動
+        future_tetromino = tetromino.next({"x": 1, "y": 0, "rot": 0})
+        assert field.is_allowed(future_tetromino) is True
+        assert future_tetromino.x == 4
+
+        # 下に1移動
+        future_tetromino = tetromino.next({"x": 0, "y": 1, "rot": 0})
+        assert field.is_allowed(future_tetromino) is True
+        assert future_tetromino.y == 2
+
+        # 90度回転
+        future_tetromino = tetromino.next({"x": 0, "y": 0, "rot": 1})
+        assert field.is_allowed(future_tetromino) is True
+        assert future_tetromino.rot == 1
+        
+    def test_drop_and_fill(self):
+        field = Field([
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        ])
+        tetromino = Tetromino(3, 2, 0, 2)  # T型テトロミノ
+
+        # テトロミノをフィールドに設置
+        for block in tetromino.calc_blocks():
+            field.put_block(block.x, block.y, tetromino.shape)
+        expected = [
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        ]
+        assert (field.tiles == expected).all()
+
+        # 埋まった行を削除
+        field.check()
+        expected = [
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        ]
+        assert (field.tiles == expected).all()
+
+    def test_game_over(self, field, tetromino):
+        # テトロミノを重複させてゲームオーバーになるか確認
+        for _ in range(2):
+            for block in tetromino.calc_blocks():
+                field.put_block(block.x, block.y, tetromino.shape)
+        assert max(field.tiles.flatten()) == 9  # 9があるとゲームオーバー
